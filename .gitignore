@@ -1,0 +1,8 @@
+/node_modules
+/vendor/*
+/tests
+/public/public/files
+/public/images
+/public/files
+composer.lock
+.idea/

@@ -1,0 +1,20 @@
+# Ignore all HTML files in all directories
+**/*.html
+
+# Ignore all JS files in all directories
+**/*.js
+
+# Ignore all css files
+**/*.css
+
+# Ignore Git repositories
+**/.git
+
+# Ignore Subversion repositories
+**/.svn
+
+# Ignore Mercurial repositories
+**/.hg
+
+# Ignore node_modules in all directories
+**/node_modules

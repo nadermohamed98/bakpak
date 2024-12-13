@@ -1,0 +1,182 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Repositories\LessonRepository;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+class LessonController extends Controller
+{
+    protected $lesson;
+
+    public function __construct(LessonRepository $lesson)
+    {
+        $this->lesson = $lesson;
+    }
+
+    public function store(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'title'       => ['required', Rule::unique('lessons')->where(function ($query) use ($request) {
+                $query->where('section_id', $request->section_id);
+            })->ignore('id')],
+            'source_data' => 'required_if:lesson_type,==doc|required_if:lesson_type,==,video|required_if:lesson_type,==,audio',
+            'duration'    => 'required_if:lesson_type,==,video|required_if:lesson_type,==,audio',
+            'live_date'   => 'required_if:lesson_type,==,live_session',
+            'live_from'   => 'required_if:lesson_type,==,live_session',
+            'live_to'     => 'required_if:lesson_type,==,live_session',
+        ]);
+        if (config('app.demo_mode')) {
+            $data = [
+                'status' => 'danger',
+                'error'  => __('this_function_is_disabled_in_demo_server'),
+                'title'  => 'error',
+            ];
+
+            return response()->json($data);
+        }
+
+        try {
+            $this->lesson->store($request->all());
+            Toastr::success(__('create_successful'));
+
+            if(isset($request->is_book_shelf) && $request->is_book_shelf == 'true'){
+                return response()->json([
+                    'success' => __('create_successful'),
+                    'route'   => route('book_shelf.edit', [$request->course_id, 'tab' => 'curriculum']),
+                ]);
+            }else{
+                return response()->json([
+                    'success' => __('create_successful'),
+                    'route'   => route('courses.edit', [$request->course_id, 'tab' => 'curriculum']),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function edit($id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $lesson = $this->lesson->find($id);
+
+            $data   = [
+                'html' => view('backend.admin.course.lesson.edit', compact('lesson'))->render(),
+            ];
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function editBookShelf($id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $lesson = $this->lesson->find($id);
+
+            $data   = [
+                'html' => view('backend.admin.book_shelf.lesson.edit', compact('lesson'))->render(),
+            ];
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
+    {
+        if ($this->lesson->find($id)->lesson_type != 'live_session'){
+            $source_data = $this->lesson->find($id)->source_data ? 'nullable' : 'required';
+        }
+
+        $request->validate([
+            'title'       => ['required', Rule::unique('lessons')->where(function ($query) use ($request, $id) {
+                $query->where('section_id', $request->section_id)->where('id', '!=', $id);
+            })->ignore('id')],
+            'source_data' => $source_data ?? 'nullable',
+            'duration'    => 'required_if:lesson_type,==,video|required_if:lesson_type,==,audio',
+            'live_date'   => 'required_if:lesson_type,==,live_session',
+            'live_from'   => 'required_if:lesson_type,==,live_session',
+            'live_to'     => 'required_if:lesson_type,==,live_session',
+        ]);
+        if (config('app.demo_mode')) {
+            $data = [
+                'status' => 'danger',
+                'error'  => __('this_function_is_disabled_in_demo_server'),
+                'title'  => 'error',
+            ];
+
+            return response()->json($data);
+        }
+
+        try {
+            $this->lesson->update($request->all(), $id);
+            Toastr::success(__('update_successful'));
+
+            if(isset($request->is_book_shelf) && $request->is_book_shelf=='true') {
+                return response()->json([
+                    'success' => __('update_successful'),
+                    'route'   => route('book_shelf.edit', [$request->course_id, 'tab' => 'curriculum']),
+                ]);
+            }else{
+                return response()->json([
+                    'success' => __('update_successful'),
+                    'route'   => route('courses.edit', [$request->course_id, 'tab' => 'curriculum']),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    public function destroy($id): \Illuminate\Http\JsonResponse
+    {
+        if (config('app.demo_mode')) {
+            $data = [
+                'status'  => 'danger',
+                'message' => __('this_function_is_disabled_in_demo_server'),
+                'title'   => 'error',
+            ];
+
+            return response()->json($data);
+        }
+        try {
+            $this->lesson->destroy($id);
+            Toastr::success(__('delete_successful'));
+            $data = [
+                'status'  => 'success',
+                'message' => __('delete_successful'),
+                'title'   => __('success'),
+            ];
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            $data = [
+                'status'  => 'danger',
+                'message' => $e->getMessage(),
+                'title'   => __('error'),
+            ];
+
+            return response()->json($data);
+        }
+    }
+
+    public function lessonOrder(Request $request)
+    {
+        try {
+            $this->lesson->lessonsOrder($request->all());
+
+            return response()->json([
+                'success' => __('update_successful'),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+}

@@ -1,0 +1,19 @@
+.custom-radio input[type="radio"] {
+    display: none; /* Hide the default radio button */
+}
+
+.custom-radio label {
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid transparent; /* Set default border */
+    padding: 5px; /* Add padding for better appearance */
+}
+
+.custom-radio label:hover {
+    border-color: #ccc; /* Change border color on hover */
+}
+
+.custom-radio input[type="radio"]:checked + label {
+    /*border-color: green; !* Change border color for checked radio button *!*/
+    border: 3px solid #25ab7c;
+}

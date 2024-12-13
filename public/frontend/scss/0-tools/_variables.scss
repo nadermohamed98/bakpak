@@ -1,0 +1,79 @@
+// ====================================================
+//        SG Admin Dashboard Color Variables
+// ====================================================
+
+// SG Admin Dashboard General color
+$white: #ffffff;
+$black: #000000;
+$dark: #111120;
+
+// SG Admin Dashboard - BG-Color
+$bg-clr1: #f3f5fe; // General Theme Backround Color
+$bg-clr2: #dfe5ff;
+$bg-clr3: #fbfbff;
+
+// SG Admin Dashboard - Text-Color
+// $text-clr1: #434343;
+$text-clr1: #556068; // General Theme Heading Color
+$text-clr2: #7e7f92; // General Theme Text Color
+$text-clr3: #bfbfbf;
+
+// $border-clr: #E5E5E5;
+$border-clr: #d7dde9;
+
+//- SG Admin Dashboard Typography(Fonts)
+$ff-jost: "Jost", sans-serif;
+$font-size: 16px;
+$fw-400: 400;
+$fw-500: 500;
+$line-height: 26px;
+
+// SG Admin Dashboard - Decoration-Color
+$brand-gradient-clr: (#3f52e3, 50%);
+$decoration-clr-1: #24d6a5;
+$decoration-clr-2: #ffa600;
+$decoration-clr-3: #ff5630;
+$decoration-clr-shade-1: #d3f7ed;
+$decoration-clr-shade-2: #ffedcc;
+$decoration-clr-shade-3: #ffddd6;
+
+// General Theme Variables Setup
+$theme-bg-clr: $bg-clr1;
+$theme-text-clr: $text-clr2;
+$theme-heading-clr: $text-clr1;
+$theme-fontFamily: $ff-jost;
+$theme-fontSize: $font-size;
+$theme-lineHeight: $line-height;
+
+// SG Admin Dashboard Color Set (Primary, Seceondary, Success, Warning, Danger, Light Colors)
+$themePrimary-clr: #3f52e3;
+$themeSeceondary-clr: #434343;
+$themeSuccess-clr: #41cc68;
+$themeWarning-clr: #ffbb33;
+$themeDanger-clr: #ff2424;
+$themeLight-clr: $white;
+
+// Customize Bootstrap color palette variables
+$primary: $themePrimary-clr;
+$secondary: $themeSeceondary-clr;
+$success: $themeSuccess-clr;
+$warning: $themeWarning-clr;
+$danger: $themeDanger-clr;
+$light: $themeLight-clr;
+
+$input-border-color: $border-clr;
+
+// BTN Default
+$btn-padding-x: 20px;
+$btn-padding-y: 10px;
+$btn-font-size: 14px;
+
+// BTN LG
+$btn-padding-y-lg: 13px;
+$btn-padding-x-lg: 30px;
+$btn-font-size-lg: 16px;
+
+// BTN SM
+$btn-padding-y-sm: 5px;
+$btn-padding-x-sm: 15px;
+$btn-font-size-sm: 14px;
